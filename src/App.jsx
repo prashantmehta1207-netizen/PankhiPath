@@ -5,12 +5,13 @@ import {
   Play, Heart, SlidersHorizontal, Info, FileAudio, WifiOff, LockKeyhole, Trees,
   Compass, CalendarDays, Settings as SettingsIcon, Trash2, History, Headphones,
   CircleStop, Languages, ChevronRight, CheckCircle2, LoaderCircle, MapPinned,
-  Feather, Footprints, ListFilter, CircleHelp, Download, ExternalLink, Award, FileText, FileJson, Camera, Route
+  Feather, Footprints, ListFilter, CircleHelp, Download, ExternalLink, Award, FileText, FileJson, Camera, Route, ChevronDown
 } from 'lucide-react';
 import Nearby from './Nearby.jsx';
 import Passport from './Passport.jsx';
 import WalkPlanner from './WalkPlanner.jsx';
 import PhotoIdentifier from './PhotoIdentifier.jsx';
+import { apiUrl } from './api.js';
 
 const BIRDS = [
   {
@@ -185,6 +186,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [serviceOnline, setServiceOnline] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [navDropdown, setNavDropdown] = useState(null);
   const [installPrompt, setInstallPrompt] = useState(null);
   const [toast, setToast] = useState('');
   const [expandedBird, setExpandedBird] = useState(null);
@@ -196,6 +198,7 @@ function App() {
   const streamRef = useRef(null);
   const stopTimerRef = useRef(null);
   const fileInputRef = useRef(null);
+  const navRef = useRef(null);
   const t = COPY[language];
 
   useEffect(() => localStorage.setItem('pankhipath-language', JSON.stringify(language)), [language]);
@@ -203,7 +206,7 @@ function App() {
   useEffect(() => localStorage.setItem('pankhipath-sightings', JSON.stringify(sightings)), [sightings]);
   useEffect(() => {
     let active = true;
-    fetch('/api/health').then((response) => response.ok ? response.json() : Promise.reject())
+    fetch(apiUrl('/api/health')).then((response) => response.ok ? response.json() : Promise.reject())
       .then((data) => { if (active) setServiceOnline(Boolean(data?.ok)); })
       .catch(() => { if (active) setServiceOnline(false); });
     return () => { active = false; };
@@ -219,6 +222,19 @@ function App() {
     };
   }, [language]);
   useEffect(() => {
+    if (!navDropdown) return undefined;
+    const onPointerDown = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) setNavDropdown(null);
+    };
+    const onKeyDown = (event) => { if (event.key === 'Escape') setNavDropdown(null); };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [navDropdown]);
+  useEffect(() => {
     if (!toast) return undefined;
     const timer = window.setTimeout(() => setToast(''), 3000);
     return () => window.clearTimeout(timer);
@@ -230,7 +246,12 @@ function App() {
   }, [audioUrl]);
 
   async function installApp() {
-    if (!installPrompt) return;
+    if (!installPrompt) {
+      setToast(language === 'gu'
+        ? 'બ્રાઉઝરના menu માં “Install app” અથવા “Add to Dock” વિકલ્પ જુઓ.'
+        : 'Open your browser menu and look for “Install app” or “Add to Dock”.');
+      return;
+    }
     await installPrompt.prompt();
     const choice = await installPrompt.userChoice.catch(() => null);
     if (choice?.outcome === 'accepted') setToast(language === 'gu' ? 'ઇન્સ્ટોલ કરવાની પ્રક્રિયા શરૂ થઈ.' : 'Installation started.');
@@ -240,6 +261,7 @@ function App() {
   function changeView(next) {
     setView(next);
     setMobileMenu(false);
+    setNavDropdown(null);
     setExpandedBird(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -314,7 +336,7 @@ function App() {
     const form = new FormData();
     form.append('audio', audioBlob, audioName || 'field-recording.webm');
     try {
-      const response = await fetch('/api/identify', { method: 'POST', body: form });
+      const response = await fetch(apiUrl('/api/identify'), { method: 'POST', body: form });
       if (!response.ok) {
         const errorBody = await response.json().catch(() => ({}));
         setServiceOnline(true);
@@ -448,15 +470,17 @@ function App() {
     setToast(t.cleared);
   }
 
-  const navItems = [
-    { id: 'home', label: t.home, icon: Leaf },
-    { id: 'identify', label: t.identify, icon: Mic },
-    { id: 'guide', label: t.guide, icon: Bird },
-    { id: 'walk', label: language === 'gu' ? 'વોક પ્લાન' : 'Walk plan', icon: Footprints },
-    { id: 'nearby', label: language === 'gu' ? 'નજીકનાં સ્થળો' : 'Nearby parks', icon: MapPinned },
-    { id: 'sightings', label: t.sightings, icon: Bookmark },
-    { id: 'passport', label: language === 'gu' ? 'પ્રકૃતિ પાસપોર્ટ' : 'Passport', icon: Award }
+  const exploreItems = [
+    { id: 'guide', label: t.guide, icon: Bird, description: language === 'gu' ? 'પક્ષીઓ અને તેમની માહિતી' : 'Discover local bird species' },
+    { id: 'walk', label: language === 'gu' ? 'વોક પ્લાન' : 'Walk plan', icon: Footprints, description: language === 'gu' ? 'તમારી nature walk ગોઠવો' : 'Plan a mindful outdoor walk' },
+    { id: 'nearby', label: language === 'gu' ? 'નજીકનાં બગીચા' : 'Nearby parks', icon: MapPinned, description: language === 'gu' ? 'આસપાસની ખુલ્લી જગ્યાઓ' : 'Find nearby green spaces' }
   ];
+  const natureItems = [
+    { id: 'sightings', label: t.sightings, icon: Bookmark, description: language === 'gu' ? 'તમે જોયેલા પક્ષીઓ' : 'Your personal field journal' },
+    { id: 'passport', label: language === 'gu' ? 'પ્રકૃતિ પાસપોર્ટ' : 'Nature Passport', icon: Award, description: language === 'gu' ? 'પ્રગતિ અને badges' : 'Your progress and achievements' }
+  ];
+  const exploreActive = ['guide', 'walk', 'nearby'].includes(view);
+  const natureActive = ['sightings', 'passport'].includes(view);
 
   const uniqueSpeciesCount = new Set(sightings.map((item) => item.birdId || item.scientific || item.name)).size;
   const savedGreenSpaceCount = readStorage('pankhipath-favorite-places', []).length;
@@ -475,12 +499,36 @@ function App() {
           <span className="brand-mark"><Bird size={23} strokeWidth={2.4} /></span>
           <span className="brand-copy"><strong>PankhiPath</strong><small>Your outdoor bird companion</small></span>
         </button>
-        <nav className={`main-nav ${mobileMenu ? 'is-open' : ''}`} aria-label="Main navigation">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return <button key={item.id} className={`nav-link ${view === item.id ? 'active' : ''}`} onClick={() => changeView(item.id)}><Icon size={16} />{item.label}</button>;
-          })}
-          <button className={`nav-link ${view === 'settings' ? 'active' : ''}`} onClick={() => changeView('settings')}><SettingsIcon size={16} />{t.settings}</button>
+        <nav ref={navRef} className={`main-nav ${mobileMenu ? 'is-open' : ''}`} aria-label="Main navigation">
+          <button className={`nav-link ${view === 'home' ? 'active' : ''}`} onClick={() => changeView('home')}><Leaf size={16} />{t.home}</button>
+          <button className={`nav-link ${view === 'identify' ? 'active' : ''}`} onClick={() => changeView('identify')}><Mic size={16} />{t.identify}</button>
+          <div className="nav-dropdown">
+            <button
+              className={`nav-link nav-dropdown-trigger ${exploreActive ? 'active' : ''} ${navDropdown === 'explore' ? 'is-expanded' : ''}`}
+              onClick={() => setNavDropdown((current) => current === 'explore' ? null : 'explore')}
+              aria-expanded={navDropdown === 'explore'} aria-haspopup="true" aria-controls="explore-menu"
+            >
+              <Compass size={16} />{language === 'gu' ? 'શોધખોળ' : 'Explore'}<ChevronDown className="nav-chevron" size={13} />
+            </button>
+            {navDropdown === 'explore' && <div className="nav-dropdown-menu" id="explore-menu" role="menu">
+              <div className="dropdown-heading">{language === 'gu' ? 'બહારની દુનિયા શોધો' : 'Explore outdoors'}<small>{language === 'gu' ? 'આગળની શોધ પસંદ કરો' : 'Choose your next discovery'}</small></div>
+              {exploreItems.map((item) => { const Icon = item.icon; return <button role="menuitem" key={item.id} className={`dropdown-item ${view === item.id ? 'active' : ''}`} onClick={() => changeView(item.id)}><span className="dropdown-item-icon"><Icon size={17} /></span><span><strong>{item.label}</strong><small>{item.description}</small></span><ChevronRight size={15} className="dropdown-item-arrow" /></button>; })}
+            </div>}
+          </div>
+          <div className="nav-dropdown">
+            <button
+              className={`nav-link nav-dropdown-trigger ${natureActive ? 'active' : ''} ${navDropdown === 'nature' ? 'is-expanded' : ''}`}
+              onClick={() => setNavDropdown((current) => current === 'nature' ? null : 'nature')}
+              aria-expanded={navDropdown === 'nature'} aria-haspopup="true" aria-controls="nature-menu"
+            >
+              <Leaf size={16} />{language === 'gu' ? 'મારું નેચર' : 'My Nature'}<ChevronDown className="nav-chevron" size={13} />
+            </button>
+            {navDropdown === 'nature' && <div className="nav-dropdown-menu" id="nature-menu" role="menu">
+              <div className="dropdown-heading">{language === 'gu' ? 'તમારો પ્રકૃતિ પ્રવાસ' : 'Your nature journey'}<small>{language === 'gu' ? 'નોંધો અને પ્રગતિ' : 'Memories and progress'}</small></div>
+              {natureItems.map((item) => { const Icon = item.icon; return <button role="menuitem" key={item.id} className={`dropdown-item ${view === item.id ? 'active' : ''}`} onClick={() => changeView(item.id)}><span className="dropdown-item-icon"><Icon size={17} /></span><span><strong>{item.label}</strong><small>{item.description}</small></span><ChevronRight size={15} className="dropdown-item-arrow" /></button>; })}
+            </div>}
+          </div>
+          <button className={`nav-link settings-nav-link ${view === 'settings' ? 'active' : ''}`} onClick={() => changeView('settings')}><SettingsIcon size={16} />{t.settings}</button>
         </nav>
         <div className="header-actions">
           <div className="lang-switch" aria-label="Language">
@@ -488,9 +536,9 @@ function App() {
             <span />
             <button className={language === 'gu' ? 'selected' : ''} onClick={() => setLanguage('gu')}>ગુજ</button>
           </div>
-          {installPrompt && <button className="install-cta" onClick={installApp}><Download size={14} />{language === 'gu' ? 'ઇન્સ્ટોલ' : 'Install app'}</button>}
-          <button className="header-cta" onClick={() => changeView('identify')}>{t.start}<ArrowUpRight size={16} /></button>
-          <button className="mobile-menu-btn" onClick={() => setMobileMenu((open) => !open)} aria-label={mobileMenu ? 'Close menu' : 'Open menu'}>{mobileMenu ? <X /> : <Menu />}</button>
+          <button className="install-cta" onClick={installApp} aria-label={language === 'gu' ? 'એપ ઇન્સ્ટોલ કરો' : 'Install app'}><Download size={14} /><span>{language === 'gu' ? 'ઇન્સ્ટોલ' : 'Install app'}</span></button>
+          <button className="header-cta" onClick={() => changeView('identify')} aria-label={t.start}><Mic className="header-cta-mic" size={15} /><span>{t.start}</span><ArrowUpRight size={16} /></button>
+          <button className="mobile-menu-btn" onClick={() => { setMobileMenu((open) => !open); setNavDropdown(null); }} aria-label={mobileMenu ? 'Close menu' : 'Open menu'} aria-expanded={mobileMenu}>{mobileMenu ? <X /> : <Menu />}</button>
         </div>
       </header>
 

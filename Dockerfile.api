@@ -1,0 +1,20 @@
+# Separate public FastAPI service for PankhiPath.
+# This image installs both BirdNET and the optional CLIP photo model dependencies.
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg libsndfile1 ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt requirements-photo.txt ./
+RUN python -m pip install --upgrade pip && \
+    python -m pip install -r requirements.txt -r requirements-photo.txt
+
+COPY backend ./backend
+EXPOSE 8000
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

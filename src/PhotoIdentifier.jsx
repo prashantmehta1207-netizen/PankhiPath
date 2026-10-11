@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, ArrowRight, Bird, Camera, CheckCircle2, ImagePlus, LoaderCircle, Mic, RotateCcw, ShieldCheck, Sparkles } from 'lucide-react';
 import './photoidentifier.css';
+import { apiUrl, isRemoteApi } from './api.js';
 
 export default function PhotoIdentifier({ language = 'en', onGoSound, onSaveSighting }) {
   const gu = language === 'gu';
@@ -41,7 +42,7 @@ export default function PhotoIdentifier({ language = 'en', onGoSound, onSaveSigh
     try {
       const form = new FormData();
       form.append('image', file, file.name || 'bird-photo.jpg');
-      const response = await fetch('/api/identify-image', { method: 'POST', body: form });
+      const response = await fetch(apiUrl('/api/identify-image'), { method: 'POST', body: form });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         const detail = typeof data.detail === 'string' ? data.detail : '';
@@ -53,14 +54,17 @@ export default function PhotoIdentifier({ language = 'en', onGoSound, onSaveSigh
       setResult(data);
       setSaved(false);
     } catch (err) {
-      setError(err?.message || (gu ? 'સ્થાનિક AI સાથે જોડાઈ શકાયું નહીં.' : 'Could not connect to the local AI service.'));
+      const fallback = isRemoteApi
+        ? (gu ? 'ઓનલાઇન AI સર્વર સાથે જોડાઈ શકાયું નહીં. સર્વર health અને CORS settings તપાસો.' : 'Could not reach the hosted AI service. Check the backend URL, health endpoint, and CORS settings.')
+        : (gu ? 'સ્થાનિક AI સાથે જોડાઈ શકાયું નહીં. Backend ચાલુ છે કે નહીં તે તપાસો.' : 'Could not connect to the local AI service. Check that the backend is running.');
+      setError(err?.message || fallback);
     } finally { setLoading(false); }
   }
 
   const top = result?.candidates?.[0];
 
   return <section className="workspace wrap photo-identifier-view">
-    <div className="page-title-row"><div><span className="eyebrow">{gu ? 'લોકલ વિઝન લેબ' : 'LOCAL VISION LAB / 02'}</span><h1>{gu ? 'ફોટાથી પક્ષી ઓળખો.' : 'Identify a bird from a photo.'}</h1><p>{gu ? 'ફોટો તમારા કમ્પ્યુટર પર ચાલતા સ્થાનિક AI મોડલથી તપાસાશે.' : 'Your image is analysed by an open-weight vision model on your own computer.'}</p></div><div className="photo-local-pill"><ShieldCheck size={16}/>{gu ? 'સ્થાનિક વિશ્લેષણ' : 'Local analysis'}</div></div>
+    <div className="page-title-row"><div><span className="eyebrow">{gu ? 'લોકલ વિઝન લેબ' : 'LOCAL VISION LAB / 02'}</span><h1>{gu ? 'ફોટાથી પક્ષી ઓળખો.' : 'Identify a bird from a photo.'}</h1><p>{isRemoteApi ? (gu ? 'ફોટો ગોઠવેલા HTTPS AI સર્વર પર મોકલીને તપાસાશે.' : 'Your image is sent to the configured HTTPS AI server for analysis.') : (gu ? 'ફોટો તમારા કમ્પ્યુટર પર ચાલતા સ્થાનિક AI મોડલથી તપાસાશે.' : 'Your image is analysed by an open-weight vision model on your own computer.')}</p></div><div className="photo-local-pill"><ShieldCheck size={16}/>{isRemoteApi ? (gu ? 'Hosted analysis' : 'Hosted analysis') : (gu ? 'સ્થાનિક વિશ્લેષણ' : 'Local analysis')}</div></div>
 
     <div className="photo-id-layout">
       <div className="photo-input-column">
@@ -70,8 +74,8 @@ export default function PhotoIdentifier({ language = 'en', onGoSound, onSaveSigh
           {previewUrl && <div className="photo-preview-actions"><span><CheckCircle2 size={14}/>{gu ? 'ફોટો તૈયાર છે' : 'Photo ready'}</span><button onClick={() => { setFile(null); setResult(null); setError(''); if (inputRef.current) inputRef.current.value = ''; }}><RotateCcw size={14}/>{gu ? 'બદલો' : 'Change photo'}</button></div>}
         </div>
         {error && <div className="photo-error" role="alert"><AlertCircle size={17}/><span>{error}</span></div>}
-        <button className="button button-primary photo-identify-button" onClick={identifyPhoto} disabled={!file || loading}>{loading ? <><LoaderCircle size={17} className="spin"/>{gu ? 'AI ફોટો તપાસે છે…' : 'Analysing photo…'}</> : <><Sparkles size={17}/>{gu ? 'સ્થાનિક AI થી ઓળખો' : 'Identify with local AI'}<ArrowRight size={15}/></>}</button>
-        <div className="photo-privacy-note"><ShieldCheck size={16}/><div><strong>{gu ? 'તમારો ફોટો તમારા કમ્પ્યુટર પર જ રહે છે' : 'Your photo stays on your computer'}</strong><p>{gu ? 'ફોટો localhost પરના backend પર મોકલાય છે, કોઈ cloud AI API પર નહીં. પ્રથમ વખત model download કરવા internet જરૂરી છે.' : 'The image is sent only to the local backend at localhost, not to a cloud AI API. An internet connection is needed to download the model the first time.'}</p></div></div>
+        <button className="button button-primary photo-identify-button" onClick={identifyPhoto} disabled={!file || loading}>{loading ? <><LoaderCircle size={17} className="spin"/>{gu ? 'AI ફોટો તપાસે છે…' : 'Analysing photo…'}</> : <><Sparkles size={17}/>{isRemoteApi ? (gu ? 'AI થી ઓળખો' : 'Identify with AI') : (gu ? 'સ્થાનિક AI થી ઓળખો' : 'Identify with local AI')}<ArrowRight size={15}/></>}</button>
+        <div className="photo-privacy-note"><ShieldCheck size={16}/><div><strong>{isRemoteApi ? (gu ? 'ફોટો hosted AI સર્વર પર મોકલાશે' : 'Photo is sent to the hosted AI server') : (gu ? 'તમારો ફોટો તમારા કમ્પ્યુટર પર જ રહે છે' : 'Your photo stays on your computer')}</strong><p>{isRemoteApi ? (gu ? 'તમારો પસંદ કરેલો ફોટો inference માટે ગોઠવેલા HTTPS backend પર અપલોડ થાય છે. માત્ર એવી જ તસ્વીરો મોકલો જે તમે તે સર્વર પર મોકલવા માટે સંમત હો.' : 'Your selected photo is uploaded to the configured HTTPS backend for inference. Only upload images you are comfortable sending to that server.') : (gu ? 'ફોટો localhost પરના backend પર મોકલાય છે, કોઈ cloud AI API પર નહીં. પ્રથમ વખત model download કરવા internet જરૂરી છે.' : 'The image is sent only to the local backend at localhost, not to a cloud AI API. An internet connection is needed to download the model the first time.')}</p></div></div>
       </div>
 
       <aside className="photo-result-column">
@@ -80,6 +84,6 @@ export default function PhotoIdentifier({ language = 'en', onGoSound, onSaveSigh
         {result && <div className="photo-result-card"><div className="photo-result-header"><span className="result-label"><CheckCircle2 size={15}/>{gu ? 'AI સૂચન' : 'AI SUGGESTION'}</span><span className="photo-model-tag">{result.model || 'OpenAI CLIP'}</span></div>{top ? <><div className="photo-top-match"><div className="photo-top-bird-icon"><Bird size={23}/></div><div className="photo-top-copy"><span>{gu ? 'શ્રેષ્ઠ મેળ' : 'TOP MATCH'}</span><h2>{gu ? (top.gujarati_name || top.common_name) : top.common_name}</h2><em>{top.scientific_name || (gu ? 'વૈજ્ઞાનિક નામ ઉપલબ્ધ નથી' : 'Scientific name unavailable')}</em></div></div><div className="photo-match-score"><div><span>{gu ? 'શોર્ટલિસ્ટમાં સંબંધિત મેળ' : 'Relative match in shortlist'}</span><strong>{Math.round((top.score || 0) * 100)}%</strong></div><div className="photo-score-track"><span style={{ width: `${Math.min(100, Math.max(0, (top.score || 0) * 100))}%` }}/></div></div><div className="photo-candidates"><h3>{gu ? 'બીજા સંભવિત મેળ' : 'Other possible matches'}</h3>{result.candidates.slice(1, 5).map((candidate, index) => <div className="photo-candidate-row" key={`${candidate.common_name}-${index}`}><span className="photo-candidate-rank">{index + 2}</span><span className="photo-candidate-name"><strong>{gu ? (candidate.gujarati_name || candidate.common_name) : candidate.common_name}</strong><em>{candidate.scientific_name}</em></span><span className="photo-candidate-score">{Math.round((candidate.score || 0) * 100)}%</span></div>)}</div><div className="photo-result-warning"><AlertCircle size={16}/><p>{gu ? 'આ સામાન્ય vision model નો પ્રયોગાત્મક પરિણામ છે. સ્કોર આ યાદીના પક્ષીઓ વચ્ચેનો સંબંધિત સ્કોર છે—સાચી સંભાવના નહીં. પક્ષીની ઓળખ નિષ્ણાત માર્ગદર્શિકા સાથે ચકાસો.' : 'This is an experimental shortlist from a general vision-language model. Scores are relative across these labels, not calibrated probabilities. Verify the species with a trusted field guide; lookalike birds can be confused.'}</p></div><button className="button button-primary photo-save-button" onClick={() => { onSaveSighting?.(top); setSaved(true); }} disabled={saved || !onSaveSighting}>{saved ? <CheckCircle2 size={15}/> : <Bird size={15}/>} {saved ? (gu ? 'નોંધ સાચવી' : 'Saved to field journal') : (gu ? 'નોંધમાં સાચવો' : 'Save as a sighting')}</button></> : <div className="photo-no-match"><h2>{gu ? 'સ્પષ્ટ મેળ મળ્યો નથી' : 'No useful match found'}</h2><p>{result.message || (gu ? 'વધુ સ્પષ્ટ ફોટો અજમાવો.' : 'Try a clearer photo with the bird visible.')}</p></div>}<button className="button button-secondary photo-sound-link" onClick={onGoSound}><Mic size={15}/>{gu ? 'અવાજથી પણ ઓળખો' : 'Try sound identification'}<ArrowRight size={14}/></button></div>}
       </aside>
     </div>
-    <div className="photo-model-note"><Sparkles size={16}/><p><strong>{gu ? 'Open-weight AI:' : 'Open-weight AI:'}</strong> {gu ? 'OpenAI CLIP image-text model સ્થાનિક inference માટે વપરાય છે. Model card તેની fine-grained ઓળખમાં મર્યાદા દર્શાવે છે, તેથી આ feature ને સહાયક અંદાજ તરીકે જ વાપરવું.' : 'This uses the open-weight OpenAI CLIP image-text model for local inference. Its model card notes fine-grained classification limitations, so treat results as a helper rather than a definitive species ID.'} <a href="https://huggingface.co/openai/clip-vit-base-patch32" target="_blank" rel="noreferrer">{gu ? 'Model card જુઓ' : 'View model card'}</a>.</p></div>
+    <div className="photo-model-note"><Sparkles size={16}/><p><strong>{gu ? 'Open-weight AI:' : 'Open-weight AI:'}</strong> {gu ? `OpenAI CLIP image-text model ${isRemoteApi ? 'hosted backend પર' : 'સ્થાનિક રીતે'} inference માટે વપરાય છે. Model card તેની fine-grained ઓળખમાં મર્યાદા દર્શાવે છે, તેથી આ feature ને સહાયક અંદાજ તરીકે જ વાપરવું.` : `This uses the open-weight OpenAI CLIP image-text model for inference ${isRemoteApi ? 'on the hosted backend' : 'locally'}. Its model card notes fine-grained classification limitations, so treat results as a helper rather than a definitive species ID.`} <a href="https://huggingface.co/openai/clip-vit-base-patch32" target="_blank" rel="noreferrer">{gu ? 'Model card જુઓ' : 'View model card'}</a>.</p></div>
   </section>;
 }

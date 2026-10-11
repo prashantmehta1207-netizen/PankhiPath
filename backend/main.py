@@ -33,12 +33,20 @@ app = FastAPI(
     description="Local-first FastAPI wrapper around the open-source BirdNET model.",
     version="1.0.0",
 )
+# Set FRONTEND_ORIGINS to a comma-separated list of trusted origins in hosting,
+# for example: https://pankhipath.vercel.app,http://localhost:5173
+_default_origins = "http://localhost:5173,http://127.0.0.1:5173"
+FRONTEND_ORIGINS = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("FRONTEND_ORIGINS", _default_origins).split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
+    allow_origins=FRONTEND_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"]
 )
 
 _MODEL: Any | None = None
