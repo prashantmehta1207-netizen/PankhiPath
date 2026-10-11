@@ -1,0 +1,96 @@
+.walk-planner-view { padding-top: 48px; }
+.walk-count-pill { display:flex; align-items:center; gap:10px; padding:10px 14px; color:#467044; background:#eef4e8; border:1px solid #dfe9d6; border-radius:15px; }
+.walk-count-pill span { display:flex; flex-direction:column; gap:2px; }
+.walk-count-pill strong { font:800 19px 'Manrope',sans-serif; line-height:1; }
+.walk-count-pill small { color:#7b8c77; font-size:9px; }
+.walk-planner-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(330px,.82fr); gap:22px; align-items:start; }
+.walk-builder-column,.walk-preview-column { display:grid; gap:17px; min-width:0; }
+.walk-planner-card,.walk-preview-card,.walk-safety-card { background:var(--paper); border:1px solid var(--line); border-radius:21px; padding:22px; box-shadow:0 8px 26px rgba(23,63,43,.035); }
+.walk-card-heading { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
+.walk-card-icon { display:grid; place-items:center; flex-shrink:0; width:42px; height:42px; border-radius:14px; background:#eaf1e3; color:#315d3b; }
+.walk-card-heading h2 { font:800 16px/1.25 'Manrope',sans-serif; margin:0 0 4px; letter-spacing:-.3px; }
+.walk-card-heading p { color:#829084; font-size:10px; margin:0; }
+.walk-duration-options { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.walk-duration-options button { display:flex; align-items:center; flex-direction:column; justify-content:center; gap:4px; min-height:69px; border:1px solid #e0e7dc; background:#fafbf7; color:#748373; border-radius:13px; transition:all .18s; }
+.walk-duration-options button strong { font:800 19px 'Manrope',sans-serif; color:#35563a; }
+.walk-duration-options button span { font-size:9px; }
+.walk-duration-options button.selected { border-color:#6f9860; background:#eef5e8; box-shadow:inset 0 0 0 1px #8eaf7b; }
+.walk-mission-options { display:grid; gap:8px; }
+.walk-mission-choice { display:grid; grid-template-columns:38px minmax(0,1fr) 22px; align-items:center; gap:10px; width:100%; padding:12px; text-align:left; border-radius:14px; border:1px solid #e4e9e1; background:#fffefb; color:inherit; transition:all .18s; }
+.walk-mission-choice:hover { border-color:#bacfb0; background:#fbfcf8; }
+.walk-mission-choice.selected { border-color:#bdcfb0; background:#f2f6ed; }
+.mission-choice-icon { display:grid; place-items:center; width:37px; height:37px; border-radius:12px; background:#e7efdf; color:#3e7042; }
+.mission-choice-copy { display:flex; flex-direction:column; gap:4px; }
+.mission-choice-copy strong { font-size:11px; color:#2d4d35; }
+.mission-choice-copy small { color:#809080; font-size:9px; line-height:1.5; }
+.mission-check { color:#477848; opacity:.3; }
+.walk-mission-choice.selected .mission-check { opacity:1; }
+.walk-inline-error { margin:10px 0 0; color:#a7473c; font-size:10px; }
+.walk-builder-actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:17px; }
+.walk-builder-actions .button { min-height:40px; font-size:10px; }
+.walk-secondary-link-row { display:flex; border-top:1px solid #edf0e9; margin-top:17px; padding-top:14px; }
+.walk-secondary-link-row button { display:inline-flex; align-items:center; gap:7px; border:0; padding:3px 0; background:transparent; color:#5c8150; font-size:10px; font-weight:800; }
+.walk-secondary-link-row button:hover { color:var(--forest); }
+.walk-preview-art { min-height:168px; border-radius:21px; overflow:hidden; position:relative; isolation:isolate; background:linear-gradient(155deg,#dfeacb,#b7d3ad 58%,#789c6f); }
+.walk-preview-art::after { content:''; position:absolute; z-index:-1; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(19,62,37,.2)); }
+.walk-sun { position:absolute; width:41px; height:41px; border-radius:50%; background:#f5e7af; top:23px; right:39px; box-shadow:0 0 0 12px rgba(251,239,198,.17); }
+.walk-hill { position:absolute; bottom:-40px; width:125%; height:117px; border-radius:50% 50% 0 0; }
+.walk-hill-back { left:-14%; background:#9bbb89; transform:rotate(-7deg); }
+.walk-hill-front { left:14%; bottom:-61px; background:#517c55; transform:rotate(5deg); }
+.walk-art-bird { position:absolute; z-index:2; left:44%; top:44px; color:#244f34; transform:rotate(-8deg); }
+.walk-art-chip { position:absolute; z-index:3; left:18px; bottom:16px; display:inline-flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid rgba(255,255,255,.45); border-radius:999px; color:#f8f6e9; background:rgba(23,63,43,.62); font-size:8px; font-weight:800; letter-spacing:1px; }
+.walk-preview-card { padding:20px; }
+.walk-preview-title { display:flex; align-items:start; justify-content:space-between; gap:10px; padding-bottom:15px; border-bottom:1px solid #edf0e9; }
+.walk-preview-title h2 { margin:4px 0 0; font:800 20px 'Manrope',sans-serif; letter-spacing:-.6px; }
+.walk-duration-badge { display:inline-flex; align-items:center; gap:5px; padding:7px 9px; color:#587c4b; background:#edf4e5; border-radius:999px; font-size:9px; font-weight:800; white-space:nowrap; }
+.walk-preview-empty { display:flex; align-items:center; flex-direction:column; text-align:center; padding:26px 12px 22px; color:#7f9875; }
+.walk-preview-empty strong { margin-top:8px; font:800 12px 'Manrope',sans-serif; color:#45634a; }
+.walk-preview-empty p { max-width:230px; margin:6px 0 0; color:#879486; font-size:9px; line-height:1.6; }
+.walk-itinerary { padding:14px 0 4px; }
+.walk-itinerary-row { display:grid; grid-template-columns:23px 32px minmax(0,1fr) auto; gap:9px; align-items:start; min-height:73px; }
+.walk-itinerary-rail { display:flex; align-items:center; flex-direction:column; height:100%; }
+.walk-itinerary-rail span { display:grid; place-items:center; width:22px; height:22px; border-radius:8px; color:#507a45; background:#e9f1e2; font-size:9px; font-weight:800; }
+.walk-itinerary-rail i { width:1px; min-height:43px; flex:1; margin-top:4px; background:#dfe8d7; }
+.walk-itinerary-icon { display:grid; place-items:center; width:31px; height:31px; border-radius:10px; background:#f1f4e9; color:#64885a; }
+.walk-itinerary-copy strong { display:block; padding-top:2px; color:#35513b; font-size:10px; }
+.walk-itinerary-copy p { margin:4px 0 11px; color:#839083; font-size:9px; line-height:1.55; }
+.walk-itinerary-minutes { color:#66815c; font-size:9px; font-weight:800; white-space:nowrap; padding-top:4px; }
+.walk-start-button { width:100%; min-height:45px; font-size:10px; margin-top:8px; }
+.walk-privacy-note { display:flex; align-items:center; justify-content:center; gap:6px; color:#899486; margin-top:12px; font-size:8px; }
+.walk-privacy-note svg { color:#78996a; flex-shrink:0; }
+.walk-safety-card { display:flex; align-items:start; gap:10px; padding:15px 17px; background:#f5f5e9; border-color:#e8e8d6; box-shadow:none; }
+.walk-safety-card > svg { color:#7b8f5c; flex-shrink:0; }
+.walk-safety-card strong { font-size:10px; color:#546542; }
+.walk-safety-card p { margin:4px 0 0; color:#7d8974; font-size:9px; line-height:1.6; }
+.phone-down-screen { min-height:calc(100vh - 210px); display:flex; align-items:center; flex-direction:column; justify-content:center; max-width:610px; margin:0 auto; padding:22px 28px; text-align:center; background:radial-gradient(circle at 50% 23%,#e7efd9 0,#f5f6ed 29%,transparent 60%); border-radius:28px; }
+.phone-down-top { display:flex; align-items:center; gap:8px; color:#71826f; font-size:10px; font-weight:800; letter-spacing:.4px; margin-bottom:21px; }
+.walk-brand-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:12px; color:#eaf0db; background:#224d32; }
+.phone-down-orbit { display:grid; place-items:center; width:103px; height:103px; border-radius:50%; background:#dfead4; margin:4px auto 20px; }
+.phone-down-orbit-inner { display:grid; place-items:center; width:68px; height:68px; border-radius:50%; background:#285d3a; color:white; box-shadow:0 0 0 9px rgba(255,255,255,.6); }
+.phone-down-screen h1 { font-size:clamp(27px,4vw,39px); letter-spacing:-1.6px; margin:9px 0 8px; }
+.phone-down-subtitle { max-width:430px; margin:0 auto 15px; color:#7e8b7a; font-size:11px; line-height:1.7; }
+.walk-timer-value { font:800 clamp(54px,9vw,83px)/1 'Manrope',sans-serif; letter-spacing:-3px; color:#234e33; font-variant-numeric:tabular-nums; padding:13px 0 15px; }
+.walk-progress-track { width:min(390px,100%); height:6px; border-radius:999px; overflow:hidden; background:#e1e9d8; }
+.walk-progress-track span { display:block; height:100%; border-radius:inherit; background:#739b62; transition:width 1s linear; }
+.walk-timer-meta { width:min(390px,100%); display:flex; align-items:center; justify-content:space-between; margin-top:9px; color:#889586; font-size:9px; }
+.walk-timer-meta strong { color:#57784b; font-size:10px; }
+.phone-down-mission { width:min(430px,100%); padding:19px 22px; margin-top:24px; border:1px solid #e0e8d8; border-radius:18px; background:rgba(255,254,249,.8); }
+.phone-down-mission span { color:#84a073; font-size:8px; font-weight:800; letter-spacing:1.5px; }
+.phone-down-mission strong { display:block; margin:7px 0 5px; font:800 14px 'Manrope',sans-serif; color:#34563a; }
+.phone-down-mission p { margin:0; color:#7c8c79; font-size:10px; line-height:1.6; }
+.phone-down-controls { display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-top:17px; }
+.phone-down-controls .button { min-height:41px; font-size:10px; }
+.walk-safety-note { display:flex; align-items:start; justify-content:center; gap:7px; max-width:460px; margin:23px auto 0; color:#8a9483; font-size:9px; line-height:1.6; }
+.walk-safety-note svg { flex-shrink:0; color:#7f9b70; }
+.walk-complete-card { max-width:620px; margin:45px auto; padding:45px 35px; text-align:center; background:var(--paper); border:1px solid #e1e9da; border-radius:26px; box-shadow:var(--shadow); }
+.walk-complete-icon { display:grid; place-items:center; width:76px; height:76px; margin:0 auto 21px; border-radius:24px; background:#e5efdc; color:#477a40; }
+.walk-complete-card h1 { max-width:460px; margin:10px auto 9px; font-size:clamp(25px,3.5vw,35px); letter-spacing:-1.2px; }
+.walk-complete-card > p { margin:0; color:#839080; font-size:11px; }
+.walk-complete-stats { display:flex; justify-content:center; gap:36px; margin:26px auto; }
+.walk-complete-stats div { display:flex; flex-direction:column; gap:5px; }
+.walk-complete-stats strong { color:#2b5737; font:800 28px 'Manrope',sans-serif; }
+.walk-complete-stats span { color:#829080; font-size:9px; }
+.walk-complete-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:9px; }
+.walk-complete-actions .button { font-size:10px; }
+@media(max-width:980px){.walk-planner-layout{grid-template-columns:1fr}.walk-preview-column{grid-row:1}.walk-preview-art{min-height:140px}.walk-preview-art~.walk-preview-card{order:0}}
+@media(max-width:620px){.walk-planner-view{padding-top:32px}.walk-planner-card,.walk-preview-card{padding:16px;border-radius:17px}.walk-duration-options{gap:5px}.walk-duration-options button{min-height:60px;border-radius:10px}.walk-duration-options button strong{font-size:17px}.walk-mission-choice{grid-template-columns:32px minmax(0,1fr) 18px;gap:8px;padding:10px}.mission-choice-icon{width:31px;height:31px;border-radius:10px}.mission-choice-copy strong{font-size:10px}.mission-choice-copy small{font-size:8px}.walk-builder-actions{flex-direction:column}.walk-builder-actions .button{width:100%}.walk-preview-title h2{font-size:18px}.walk-itinerary-row{grid-template-columns:23px 29px minmax(0,1fr) auto;gap:7px}.walk-itinerary-icon{width:28px;height:28px}.phone-down-screen{padding:18px 14px;min-height:75vh}.walk-complete-card{padding:30px 18px;margin:15px auto}.walk-complete-stats{gap:25px}}

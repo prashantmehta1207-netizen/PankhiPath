@@ -1,0 +1,5 @@
+# Optional local image identification dependencies.
+# The model weights download on first use (roughly 600 MB) and are cached locally.
+torch>=2.2
+transformers>=4.44,<5
+Pillow>=10

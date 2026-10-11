@@ -1,0 +1,75 @@
+.photo-identifier-view { padding-top:48px; }
+.photo-local-pill { display:inline-flex; align-items:center; gap:7px; padding:9px 12px; color:#537a4c; background:#edf4e7; border:1px solid #dce8d3; border-radius:999px; font-size:10px; font-weight:800; white-space:nowrap; }
+.photo-id-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.9fr); align-items:stretch; gap:21px; }
+.photo-input-column,.photo-result-column { min-width:0; }
+.photo-drop-zone { min-height:435px; border:1.5px dashed #cddbc4; background:linear-gradient(155deg,#f2f6ec,#fffef9); border-radius:23px; padding:19px; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.photo-drop-zone:focus-within,.photo-drop-zone:hover { border-color:#95b583; }
+.photo-drop-empty { display:flex; align-items:center; flex-direction:column; text-align:center; max-width:330px; padding:20px; }
+.photo-drop-icon { display:grid; place-items:center; width:66px; height:66px; border-radius:22px; background:#e3edd9; color:#477145; margin-bottom:16px; }
+.photo-drop-empty h2 { margin:0 0 7px; font:800 21px 'Manrope',sans-serif; letter-spacing:-.6px; }
+.photo-drop-empty p { max-width:290px; margin:0 0 18px; color:#7d8b7b; font-size:11px; line-height:1.65; }
+.photo-drop-empty .button { font-size:10px; }
+.photo-drop-empty > small { margin-top:14px; color:#9aa497; font-size:8px; letter-spacing:.5px; }
+.photo-preview-image { width:100%; height:390px; object-fit:contain; border-radius:14px; background:#eef2e9; }
+.photo-preview-actions { position:absolute; left:29px; right:29px; bottom:27px; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid rgba(219,230,211,.88); border-radius:12px; background:rgba(255,254,249,.92); backdrop-filter:blur(12px); }
+.photo-preview-actions span,.photo-preview-actions button { display:inline-flex; align-items:center; gap:6px; color:#597a4e; font-size:9px; font-weight:800; }
+.photo-preview-actions button { border:0; background:transparent; }
+.photo-identify-button { width:100%; min-height:45px; margin-top:13px; font-size:11px; }
+.photo-identify-button .spin { animation:spinner 1s linear infinite; }
+.photo-error { display:flex; align-items:start; gap:9px; margin-top:12px; padding:12px; border:1px solid #eed7d1; border-radius:12px; color:#984a3f; background:#fff4f1; font-size:10px; line-height:1.55; }
+.photo-error svg { flex-shrink:0; margin-top:1px; }
+.photo-privacy-note { display:flex; align-items:start; gap:9px; padding:14px 4px 0; color:#71886c; }
+.photo-privacy-note > svg { flex-shrink:0; margin-top:2px; }
+.photo-privacy-note strong { display:block; color:#526e4b; font-size:10px; margin-bottom:4px; }
+.photo-privacy-note p { margin:0; font-size:9px; color:#849181; line-height:1.6; }
+.photo-result-empty,.photo-result-card { min-height:435px; height:100%; border:1px solid #e1e8dd; background:#fffef9; border-radius:23px; padding:25px; }
+.photo-result-empty { display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; }
+.photo-result-orbit { display:grid; place-items:center; width:107px; height:107px; border-radius:50%; background:#edf3e7; border:1px solid #dce8d4; color:#426d42; position:relative; margin-bottom:24px; }
+.photo-result-orbit::before { content:''; position:absolute; inset:11px; border:1px solid #d1e1c7; border-radius:50%; }
+.photo-result-orbit > svg { position:relative; z-index:2; }
+.photo-result-orbit span { position:absolute; width:8px; height:8px; border-radius:50%; background:#e1ca87; top:12px; right:17px; }
+.photo-result-orbit span:last-child { top:auto; right:auto; bottom:18px; left:16px; background:#8cab78; }
+.photo-result-empty h2 { margin:9px 0 8px; font:800 21px 'Manrope',sans-serif; letter-spacing:-.6px; }
+.photo-result-empty > p { max-width:280px; color:#839080; font-size:10px; line-height:1.7; }
+.photo-tip { display:flex; align-items:start; gap:8px; max-width:330px; padding:11px 12px; text-align:left; color:#72846c; background:#f4f7ef; border-radius:12px; font-size:9px; line-height:1.55; }
+.photo-tip svg { flex-shrink:0; color:#73975c; }
+.photo-result-loading > svg { color:#53824b; }
+.photo-result-loading h2 { font-size:18px; }
+.photo-result-card { min-height:0; }
+.photo-result-header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:22px; }
+.photo-result-header .result-label { display:flex; align-items:center; gap:6px; color:#618c51; font-size:9px; font-weight:800; letter-spacing:.8px; }
+.photo-model-tag { padding:6px 8px; border-radius:8px; color:#8b947f; background:#f2f3eb; font-size:8px; font-weight:700; }
+.photo-top-match { display:flex; align-items:center; gap:13px; padding:16px; border-radius:17px; background:linear-gradient(130deg,#f0f6e9,#fbfcf7); border:1px solid #e1ead9; }
+.photo-top-bird-icon { display:grid; place-items:center; width:48px; height:48px; border-radius:15px; background:#dcead1; color:#345f39; flex-shrink:0; }
+.photo-top-copy { min-width:0; }
+.photo-top-copy > span { color:#8aa17b; font-size:8px; letter-spacing:1.2px; font-weight:800; }
+.photo-top-copy h2 { margin:4px 0 3px; font:800 17px 'Manrope',sans-serif; letter-spacing:-.4px; overflow-wrap:anywhere; }
+.photo-top-copy em { color:#849180; font-size:9px; }
+.photo-match-score { padding:16px 1px 18px; border-bottom:1px solid #edf0e9; }
+.photo-match-score > div:first-child { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; color:#81907e; font-size:9px; }
+.photo-match-score strong { color:#4e7843; font:800 15px 'Manrope',sans-serif; }
+.photo-score-track { height:6px; background:#e8eee1; border-radius:99px; overflow:hidden; }
+.photo-score-track span { display:block; height:100%; background:#7da567; border-radius:99px; transition:width .4s; }
+.photo-candidates { padding:15px 0 7px; }
+.photo-candidates h3 { margin:0 0 8px; color:#526650; font:800 11px 'Manrope',sans-serif; }
+.photo-candidate-row { display:flex; align-items:center; gap:9px; padding:9px 0; border-bottom:1px solid #f0f2ec; }
+.photo-candidate-rank { display:grid; place-items:center; width:23px; height:23px; border-radius:8px; background:#f0f4eb; color:#758b68; font-size:9px; font-weight:800; flex-shrink:0; }
+.photo-candidate-name { display:flex; flex:1; flex-direction:column; gap:3px; min-width:0; }
+.photo-candidate-name strong { color:#4c604b; font-size:9px; }
+.photo-candidate-name em { color:#9aa294; font-size:8px; }
+.photo-candidate-score { color:#759269; font-size:9px; font-weight:800; }
+.photo-result-warning { display:flex; align-items:start; gap:8px; padding:11px; margin-top:12px; color:#8b774d; background:#faf4e4; border:1px solid #eee4c9; border-radius:12px; }
+.photo-result-warning svg { flex-shrink:0; margin-top:1px; }
+.photo-result-warning p { margin:0; font-size:8px; line-height:1.6; }
+.photo-no-match { padding:30px 0; }
+.photo-no-match h2 { font:800 18px 'Manrope',sans-serif; }
+.photo-no-match p { color:#849080; font-size:10px; line-height:1.6; }
+.photo-sound-link { width:100%; margin-top:14px; min-height:40px; font-size:10px; }
+.photo-model-note { display:flex; align-items:start; gap:9px; margin-top:18px; padding:13px 15px; border:1px solid #e2e9dc; border-radius:13px; background:#f5f7f0; color:#7b8d78; }
+.photo-model-note > svg { flex-shrink:0; margin-top:1px; color:#7a9c67; }
+.photo-model-note p { margin:0; font-size:9px; line-height:1.6; }
+.photo-model-note strong { color:#526d4b; }
+.photo-model-note a { color:#4f7845; font-weight:800; }
+@media(max-width:900px){.photo-id-layout{grid-template-columns:1fr}.photo-drop-zone{min-height:335px}.photo-preview-image{height:295px}.photo-result-empty{min-height:330px}.photo-result-card{min-height:0}}
+@media(max-width:620px){.photo-identifier-view{padding-top:32px}.photo-drop-zone,.photo-result-empty,.photo-result-card{border-radius:17px}.photo-drop-zone{min-height:300px;padding:12px}.photo-preview-image{height:275px}.photo-preview-actions{left:18px;right:18px;bottom:17px}.photo-drop-empty h2{font-size:18px}.photo-drop-empty p{font-size:10px}.photo-result-empty,.photo-result-card{padding:17px}.photo-top-copy h2{font-size:15px}.photo-model-note{padding:11px;font-size:8px}}
+.photo-save-button { width:100%; min-height:41px; margin-top:12px; font-size:10px; }
