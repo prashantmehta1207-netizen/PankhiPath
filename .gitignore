@@ -32,3 +32,25 @@ models/
 
 # macOS
 .DS_Store
+
+# Dependencies
+node_modules/
+dist/
+.venv/
+venv/
+__pycache__/
+
+# Secrets
+.env
+.env.*
+
+# Downloaded AI models
+.cache/
+models/
+*.onnx
+*.pt
+*.pth
+*.bin
+
+# macOS
+.DS_Store
