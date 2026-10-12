@@ -167,3 +167,7 @@ The app includes a PWA manifest, icons and a service worker. On supported Chromi
 - Open **Walk plan** to choose 15–60 minutes and select missions such as listening for calls, scanning trees, noticing natural colours, and remembering a discovery. Build the itinerary, then start Phone-Down Mode. The timer supports pause, resume, and finish; completing a session stores a local history entry. It does not lock the phone or independently verify that the walk happened.
 - Open **Photo ID** from the home shortcuts or the sound identification page. It sends the selected image to the local FastAPI service at `localhost`, not to a hosted inference API. The first run needs internet to download the CLIP weights; after they are cached, prediction runs locally.
 - CLIP is a general image/text model, not a specialist bird taxonomy model. The feature compares an image against 24 starter species labels and returns relative scores. Similar-looking species, non-bird images, crops, and regional species outside this shortlist may produce misleading suggestions. Do not treat the top result as a confirmed identification.
+
+
+
+
